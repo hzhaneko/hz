@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile của Haneko</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+            integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="card">
+            <div class="card__img">
+                <img src="https://raw.githubusercontent.com/imissher-Marshmallow/hz-pro5/refs/heads/master/jett.jpg" alt="Avatar" />
+            </div>
+            <h2>Haneko</h2>
+            <p>chill guy</p>
+            <div class="card__social">
+                <a href="https://www.facebook.com/hlz.h4n3k0/">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://github.com/imissher-Marshmallow">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://www.tiktok.com/@hlz.h4n3k0_">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+                <a href="#" id="emailBtn">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
+            <button id="openModalBtn">About me=)) </button>
+        </div>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">×</span>
+                <div class="modal-body">
+                    <h2>TTHaii</h2>
+                    <div class="project-item">
+                        <ul>
+                            <li> Hi! My name is ThanhHai=)) .</li>
+                            <li> All nicknames: Jett / Haneko / etc .</li>
+                            <li>I'm a secondary school student, I like science and IT and I love to explore nature .</li>
+                            <li>I love wandering around the Internet, listening to music, watching tiktok, exploring linux distros, playing games, anime, manga, etc.</li>
+                            <li>My main language is Vietnamese, but I can also speak English.</li>
+                            <li>I use Arch, btw=)) . I am a newbie so I often learn about things I don't know and I custom Arch to my liking.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="emailModal" class="modal">
+            <div class="modal-content">
+                <span class="close-email-button close-button">×</span>
+                <div class="modal-body">
+                    <h2>Contact Email</h2>
+                    <div class="project-item">
+                        <p class="project-description" style="text-align: center; font-size: 20px; color: white;">
+                            <strong>haneko@linux.com.vn</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>

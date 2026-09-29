@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
+:root {
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+    --ctp-surface0: #313244;
+    --ctp-surface1: #45475a;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext0: #a6adc8;
+    --ctp-accent: #cba6f7; 
+    --ctp-accent-hover: #b4befe;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: var(--ctp-base);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+}
+
+.card {
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px; 
+    text-align: center;
+    background-color: rgba(24, 24, 37, 0.75);
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--ctp-surface0);
+    box-shadow: 0 10px 25px rgba(17, 17, 27, 0.6); 
+    transition: all 0.4s ease;
+    z-index: 10;
+}
+
+.card.hidden {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+    pointer-events: none;
+}
+
+.card__img {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    border: 5px solid var(--ctp-accent);
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(203, 166, 247, 0.3);
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+h2 {
+    color: var(--ctp-text);
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+p {
+    color: var(--ctp-accent);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card__social {
+    margin: 25px 0 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card__social a {
+    text-decoration: none;
+    color: var(--ctp-text);
+    font-size: 22px;
+    transition: 0.3s;
+}
+
+.card__social a:hover {
+    color: var(--ctp-accent);
+    transform: translateY(-3px);
+}
+
+button#openModalBtn {
+    outline: none;
+    background: transparent;
+    border: 2px solid var(--ctp-accent);
+    color: var(--ctp-text);
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button#openModalBtn:hover {
+    background-color: var(--ctp-accent);
+    color: var(--ctp-crust);
+    box-shadow: 0 5px 15px rgba(203, 166, 247, 0.4);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(17, 17, 27, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 100;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background-color: rgba(30, 30, 46, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: var(--ctp-text);
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px;
+    position: relative;
+    border: 1px solid var(--ctp-surface0);
+    box-shadow: 0 15px 35px rgba(17, 17, 27, 0.8);
+    transform: translateY(30px);
+    transition: transform 0.4s ease-out;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.close-button {
+    color: var(--ctp-subtext0);
+    font-size: 30px;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-button:hover {
+    color: var(--ctp-accent);
+}
+
+.modal-body h2 {
+    text-align: left;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.project-item ul {
+    list-style: none;
+}
+
+.project-item ul li {
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ctp-text);
+    position: relative;
+    padding-left: 25px;
+}
+
+.project-item ul li::before {
+    content: "•";
+    color: var(--ctp-accent);
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+}
+
+#emailModal .modal-content {
+    max-width: 500px; 
+    padding: 30px 40px;
+}
+
+.email-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background-color: var(--ctp-surface0);
+    padding: 15px 20px;
+    border-radius: 12px;
+}
