@@ -1,76 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Profile của Haneko</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-            integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <div class="card">
-            <div class="card__img">
-                <img src="https://raw.githubusercontent.com/imissher-Marshmallow/hz-pro5/refs/heads/master/jett.jpg" alt="Avatar" />
-            </div>
-            <h2>Haneko</h2>
-            <p>chill guy</p>
-            <div class="card__social">
-                <a href="https://www.facebook.com/hlz.h4n3k0/">
-                    <i class="fa-brands fa-facebook"></i>
-                </a>
-                <a href="https://github.com/imissher-Marshmallow">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-                <a href="https://www.tiktok.com/@hlz.h4n3k0_">
-                    <i class="fa-brands fa-tiktok"></i>
-                </a>
-                <a href="#" id="emailBtn">
-                    <i class="fa-solid fa-envelope"></i>
-                </a>
-            </div>
-            <button id="openModalBtn">About me=)) </button>
-        </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haneko Space | Profile & Setup</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow ambient-glow--top-right"></div>
+    <div class="ambient-glow ambient-glow--bottom-left"></div>
+    <div class="ambient-glow ambient-glow--center"></div>
 
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">×</span>
-                <div class="modal-body">
-                    <h2>TTHaii</h2>
-                    <div class="project-item">
-                        <ul>
-                            <li> Hi! My name is ThanhHai=)) .</li>
-                            <li> All nicknames: Jett / Haneko / etc .</li>
-                            <li>I'm a secondary school student, I like science and IT and I love to explore nature .</li>
-                            <li>I love wandering around the Internet, listening to music, watching tiktok, exploring linux distros, playing games, anime, manga, etc.</li>
-                            <li>My main language is Vietnamese, but I can also speak English.</li>
-                            <li>I use Arch, btw=)) . I am a newbie so I often learn about things I don't know and I custom Arch to my liking.</li>
-                        </ul>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar__container">
+            <div class="navbar__brand">
+                <span class="brand-spark">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" />
+                        <circle cx="19" cy="5" r="2" />
+                        <circle cx="5" cy="19" r="1.5" />
+                    </svg>
+                </span>
+                <span class="brand-name">Haneko</span>
+            </div>
+
+            <nav class="navbar__links">
+                <a href="#about" class="nav-link" id="navAbout">About</a>
+                <a href="#projects" class="nav-link" id="navProjects">Projects</a>
+                <a href="#setup" class="nav-link" id="navSetup">CachyOS Setup</a>
+                <a href="#socials" class="nav-link" id="navSocials">Socials</a>
+                <a href="https://github.com/imissher-Marshmallow" target="_blank" class="nav-link">GitHub ↗</a>
+            </nav>
+
+            <div class="navbar__actions">
+                <button class="btn btn--outline" id="contactBtn">Contact</button>
+                <button class="btn btn--white" id="tryMeBtn">Explore</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub-header Breadcrumb bar -->
+    <div class="sub-nav">
+        <div class="sub-nav__container">
+            <div class="sub-nav__breadcrumb">
+                <span class="crumb-muted">Profile</span>
+                <span class="crumb-sep">/</span>
+                <span class="crumb-active">Haneko Space</span>
+            </div>
+            <div class="sub-nav__explore" id="exploreDropdownBtn">
+                <span>h4n3k0_0 @ Jettpc</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Hero Section -->
+    <main class="hero">
+        <div class="hero__container">
+            <!-- Left Hero Content -->
+            <div class="hero__intro">
+                <h1 class="hero__title">Haneko Code</h1>
+                <p class="hero__description">
+                    ThanhHai (Haneko / Jett). Secondary school student, passionate about science, IT, exploring Linux, ricing Hyprland, and playing Valorant.
+                </p>
+
+                <div class="hero__cta">
+                    <button class="btn btn--white-large" id="openAboutModalBtn">
+                        About Haneko
+                    </button>
+                    <a href="https://github.com/imissher-Marshmallow" target="_blank" class="btn btn--glass-large">
+                        <span>View GitHub</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="hero__badges">
+                    <span class="status-dot"></span>
+                    <span>Running CachyOS Linux • Hyprland • foot & fish</span>
+                </div>
+            </div>
+
+            <!-- Right Hero Mockup App Window -->
+            <div class="hero__mockup">
+                <div class="window-frame">
+                    <!-- Window Topbar -->
+                    <div class="window-topbar">
+                        <div class="window-traffic-lights">
+                            <span class="light light--red"></span>
+                            <span class="light light--yellow"></span>
+                            <span class="light light--green"></span>
+                        </div>
+                        <div class="window-actions">
+                            <button class="window-icon-btn" title="Toggle Sidebar">
+                                <i class="fa-regular fa-window-maximize"></i>
+                            </button>
+                            <button class="window-icon-btn" title="Back">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <button class="window-icon-btn" title="Forward">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button class="window-icon-btn" title="Code Mode">
+                                <i class="fa-solid fa-code"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Window Body: Sidebar + Main Chat/Terminal -->
+                    <div class="window-body">
+                        <!-- Sidebar -->
+                        <aside class="mockup-sidebar">
+                            <button class="sidebar-new-btn" id="mockNewSessionBtn">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>New Session</span>
+                            </button>
+
+                            <div class="sidebar-menu">
+                                <a href="#" class="sidebar-item active">
+                                    <i class="fa-regular fa-folder-open"></i>
+                                    <span>Projects</span>
+                                    <span class="badge-new">New</span>
+                                </a>
+                                <a href="#" class="sidebar-item" id="sidebarAboutBtn">
+                                    <i class="fa-solid fa-cube"></i>
+                                    <span>About Me</span>
+                                </a>
+                                <a href="#" class="sidebar-item" id="sidebarSetupBtn">
+                                    <i class="fa-solid fa-sliders"></i>
+                                    <span>Setup Specs</span>
+                                </a>
+                            </div>
+
+                            <div class="sidebar-section">
+                                <div class="section-label">PINNED</div>
+                                <div class="sidebar-subitem active-sub" data-file="hyprland.conf">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <span>hyprland.conf</span>
+                                </div>
+                                <div class="sidebar-subitem" data-file="cachyos-config.fish">
+                                    <i class="fa-solid fa-terminal"></i>
+                                    <span>config.fish</span>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-section">
+                                <div class="section-label">RECENTS</div>
+                                <div class="sidebar-subitem active-file" data-file="specs_fetch.sh">
+                                    <span class="bullet">•</span>
+                                    <span>specs_fetch.sh</span>
+                                </div>
+                                <div class="sidebar-subitem" data-file="foot.ini">
+                                    <span class="bullet">•</span>
+                                    <span>foot.ini</span>
+                                </div>
+                                <div class="sidebar-subitem" data-file="valorant-settings">
+                                    <span class="bullet">•</span>
+                                    <span>valorant-settings</span>
+                                </div>
+                                <div class="sidebar-subitem" data-file="python-skibidi">
+                                    <span class="bullet">•</span>
+                                    <span>python-skibidi</span>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-profile">
+                                <img src="https://raw.githubusercontent.com/imissher-Marshmallow/hz-pro5/refs/heads/master/jett.jpg" alt="Avatar" class="avatar-mini" />
+                                <span class="profile-name">h4n3k0_0 @ Jettpc</span>
+                                <i class="fa-solid fa-gear settings-icon"></i>
+                            </div>
+                        </aside>
+
+                        <!-- Main Chat / Terminal area -->
+                        <section class="mockup-chat">
+                            <div class="chat-header">
+                                <span class="repo-breadcrumb">
+                                    <strong>h4n3k0_0 @ Jettpc</strong> / fastfetch-specs.sh ⌵
+                                </span>
+                            </div>
+
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- User Message -->
+                                <div class="chat-bubble chat-bubble--user">
+                                    fastfetch --system-specs
+                                </div>
+
+                                <!-- Assistant Reply / Terminal Specs Output -->
+                                <div class="chat-bubble chat-bubble--assistant">
+                                    <div class="terminal-banner">
+                                        <i class="fa-solid fa-cat"></i>
+                                        <span>I Luv Her | hmyyy&lt;3</span>
+                                    </div>
+
+                                    <div class="system-summary">
+                                        <div class="summary-line"><span class="label">OS:</span> CachyOS Linux</div>
+                                        <div class="summary-line"><span class="label">Host:</span> HP Laptop 14-em0xxx</div>
+                                        <div class="summary-line"><span class="label">Kernel:</span> 7.3.0-4-cachyos</div>
+                                        <div class="summary-line"><span class="label">WM:</span> Hyprland (Wayland)</div>
+                                        <div class="summary-line"><span class="label">Shell:</span> fish 4.9.3</div>
+                                        <div class="summary-line"><span class="label">Terminal:</span> foot</div>
+                                        <div class="summary-line"><span class="label">Hardware:</span> AMD Ryzen 5 7520U • AMD Radeon 610M</div>
+                                        <div class="summary-line"><span class="label">Game:</span> Valorant</div>
+                                    </div>
+
+                                    <div class="diff-tag">
+                                        <span>Status: <strong>Clean & Tweaked</strong> <span class="diff-green">1579 pkgs</span> (pacman)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input Box -->
+                            <div class="chat-input-wrapper">
+                                <form id="chatForm" class="chat-input-box">
+                                    <input 
+                                        type="text" 
+                                        id="chatInput" 
+                                        placeholder="Ask Gemini AI or type 'specs', 'valorant', 'fish', 'clear'..."
+                                        autocomplete="off"
+                                    />
+                                    <button type="submit" class="send-btn" title="Send to Gemini">
+                                        <i class="fa-solid fa-arrow-turn-down"></i>
+                                    </button>
+                                </form>
+                                <div class="chat-input-footer">
+                                    <div class="footer-left">
+                                        <span class="badge-icon"><i class="fa-solid fa-fish"></i> fish</span>
+                                        <span class="badge-icon"><i class="fa-solid fa-terminal"></i> foot</span>
+                                        <span class="badge-icon"><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI</span>
+                                    </div>
+                                    <div class="footer-right">
+                                        <span class="status-mode">CachyOS 7.3.0</span>
+                                        <span class="status-mode">Online</span>
+                                        <span class="ring-loader"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
+    </main>
 
-        <div id="emailModal" class="modal">
-            <div class="modal-content">
-                <span class="close-email-button close-button">×</span>
-                <div class="modal-body">
-                    <h2>Contact Email</h2>
-                    <div class="project-item">
-                        <p class="project-description" style="text-align: center; font-size: 20px; color: white;">
-                            <strong>haneko@linux.com.vn</strong>
-                        </p>
+    <!-- Bottom Channels / Ecosystem Row (Exact matching request) -->
+    <section class="ecosystem-section" id="socials">
+        <p class="ecosystem-title">Other ways to connect and explore:</p>
+        <div class="ecosystem-grid">
+            <a href="https://github.com/imissher-Marshmallow" target="_blank" class="eco-card" title="GitHub">
+                <div class="eco-icon"><i class="fa-brands fa-github"></i></div>
+                <span class="eco-label">GitHub</span>
+            </a>
+            <a href="https://www.facebook.com/hlz.h4n3k0/" target="_blank" class="eco-card" title="Facebook">
+                <div class="eco-icon"><i class="fa-brands fa-facebook"></i></div>
+                <span class="eco-label">Facebook</span>
+            </a>
+            <a href="https://www.tiktok.com/@hlz.h4n3k0_" target="_blank" class="eco-card" title="TikTok">
+                <div class="eco-icon"><i class="fa-brands fa-tiktok"></i></div>
+                <span class="eco-label">TikTok</span>
+            </a>
+            <a href="#" class="eco-card" id="openEmailCardBtn" title="Email">
+                <div class="eco-icon"><i class="fa-solid fa-envelope"></i></div>
+                <span class="eco-label">Email</span>
+            </a>
+            <div class="eco-card" id="cachyCard" title="CachyOS Linux">
+                <div class="eco-icon"><i class="fa-brands fa-linux"></i></div>
+                <span class="eco-label">CachyOS</span>
+            </div>
+            <div class="eco-card" id="termCard" title="foot + fish shell">
+                <div class="eco-icon"><i class="fa-solid fa-terminal"></i></div>
+                <span class="eco-label">foot & fish</span>
+            </div>
+            <div class="eco-card" id="codeCard" title="Rice & Configs">
+                <div class="eco-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <span class="eco-label">Code / Rice</span>
+            </div>
+            <div class="eco-card" id="gameCard" title="Valorant">
+                <div class="eco-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <span class="eco-label">Valorant</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal About Me -->
+    <div id="myModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <img src="https://raw.githubusercontent.com/imissher-Marshmallow/hz-pro5/refs/heads/master/jett.jpg" alt="Avatar" class="modal-avatar" />
+                    <div>
+                        <h2>ThanhHai (Haneko)</h2>
+                        <span class="modal-sub">h4n3k0_0 @ Jettpc • Chill guy</span>
                     </div>
+                </div>
+                <button class="modal-close-btn close-button" aria-label="Close modal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="about-grid">
+                    <div class="about-box">
+                        <div class="about-box-title"><i class="fa-solid fa-user-astronaut"></i> Identity & Nicknames</div>
+                        <p>Hi! My name is <strong>ThanhHai</strong>. Nicknames: <strong>Haneko</strong> / <strong>Jett</strong> / <strong>TTHaii</strong>.</p>
+                    </div>
+
+                    <div class="about-box">
+                        <div class="about-box-title"><i class="fa-solid fa-graduation-cap"></i> Student & IT Explorer</div>
+                        <p>Secondary school student. Passionate about science, IT, hardware & Linux distros.</p>
+                    </div>
+
+                    <div class="about-box">
+                        <div class="about-box-title"><i class="fa-brands fa-linux"></i> CachyOS & Hyprland</div>
+                        <p>Daily driver: <strong>CachyOS Linux</strong> on HP Laptop 14-em0xxx with <strong>Hyprland</strong>, <strong>foot</strong> terminal, and <strong>fish shell</strong>.</p>
+                    </div>
+
+                    <div class="about-box">
+                        <div class="about-box-title"><i class="fa-solid fa-crosshairs"></i> Gaming & Hobbies</div>
+                        <p>Playing <strong>Valorant</strong>, listening to chill music, exploring Linux configurations and internet tech.</p>
+                    </div>
+                </div>
+
+                <div class="modal-tags">
+                    <span class="tag"><i class="fa-solid fa-language"></i> Tiếng Việt & English</span>
+                    <span class="tag"><i class="fa-brands fa-linux"></i> CachyOS Linux</span>
+                    <span class="tag"><i class="fa-solid fa-terminal"></i> foot + fish</span>
+                    <span class="tag"><i class="fa-solid fa-crosshairs"></i> Valorant</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="script.js"></script>
-    </body>
+    <!-- Modal Email Contact -->
+    <div id="emailModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-content--sm">
+            <div class="modal-header">
+                <h3>Contact Email</h3>
+                <button class="modal-close-btn close-email-button" aria-label="Close modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Feel free to reach out to Haneko:</p>
+                <div class="email-copy-card">
+                    <span class="email-text" id="emailToCopy">haneko@linux.com.vn</span>
+                    <button class="copy-btn" id="copyEmailBtn" title="Copy to clipboard">
+                        <i class="fa-regular fa-copy"></i>
+                        <span id="copyFeedback">Copy</span>
+                    </button>
+                </div>
+                <div class="email-cta">
+                    <a href="mailto:haneko@linux.com.vn" class="btn btn--white" style="width: 100%; text-align: center; display: block; margin-top: 15px;">
+                        Open Email Client ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
