@@ -2,10 +2,14 @@
 // Haneko Space - Interactive Logic & Google Gemini API Integration
 // ==========================================================================
 
-const GEMINI_API_KEY = "AQ.Ab8RN6LjxIfeclkYPBr4EnFcp2-A_P-VSUWLHST-M_7NbG4d_g";
+const DEFAULT_KEY = "AQ.Ab8RN6L7T_Glv7x527mcvqsVHP_L7aUB96nMhUogNsOnAYl3HA";
 
-// Cached working endpoint
-let cachedModelEndpoint = null;
+// Always sync with the latest valid key
+let activeKey = DEFAULT_KEY;
+localStorage.setItem("GEMINI_USER_KEY", DEFAULT_KEY);
+
+// Cached working endpoint config: { ver, model } (Only set on SUCCESSFUL reply!)
+let verifiedEndpoint = null;
 
 // Conversation memory for continuous multi-turn chat
 let conversationHistory = [];
@@ -91,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = emailToCopy.textContent.trim();
             navigator.clipboard.writeText(text).then(() => {
                 copyFeedback.textContent = "Copied!";
-                copyEmailBtn.style.color = "#4ade80";
+                copyEmailBtn.style.color = "#a6e3a1";
                 setTimeout(() => {
                     copyFeedback.textContent = "Copy";
                     copyEmailBtn.style.color = "";
@@ -226,117 +230,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Automatically discover available working Gemini model
-    async function resolveWorkingEndpoint() {
-        if (cachedModelEndpoint) return cachedModelEndpoint;
-
-        // Step 1: Query ListModels dynamically from Google API
-        const versions = ["v1beta", "v1"];
-        for (const ver of versions) {
-            try {
-                const listUrl = `https://generativelanguage.googleapis.com/${ver}/models?key=${encodeURIComponent(GEMINI_API_KEY)}`;
-                const res = await fetch(listUrl);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.models && Array.isArray(data.models) && data.models.length > 0) {
-                        const supported = data.models.filter(m => 
-                            m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent")
-                        );
-                        if (supported.length > 0) {
-                            // Find best match: 1.5-flash-latest, 1.5-flash, 2.0-flash, pro, etc.
-                            const best = supported.find(m => m.name.includes("1.5-flash-latest")) ||
-                                         supported.find(m => m.name.includes("1.5-flash")) ||
-                                         supported.find(m => m.name.includes("2.0-flash")) ||
-                                         supported.find(m => m.name.includes("flash")) ||
-                                         supported.find(m => m.name.includes("gemini")) ||
-                                         supported[0];
-                            const cleanName = best.name.startsWith("models/") ? best.name.replace("models/", "") : best.name;
-                            cachedModelEndpoint = {
-                                version: ver,
-                                modelName: cleanName,
-                                url: `https://generativelanguage.googleapis.com/${ver}/models/${cleanName}:generateContent`
-                            };
-                            return cachedModelEndpoint;
-                        }
-                    }
-                }
-            } catch (err) {
-                console.warn(`ListModels error on ${ver}:`, err);
-            }
-        }
-
-        // Step 2: Fallback candidates
-        const fallbacks = [
-            { ver: "v1beta", model: "gemini-1.5-flash-latest" },
-            { ver: "v1beta", model: "gemini-2.0-flash" },
-            { ver: "v1beta", model: "gemini-2.0-flash-exp" },
-            { ver: "v1", model: "gemini-1.5-flash" },
-            { ver: "v1beta", model: "gemini-pro" }
-        ];
-
-        return {
-            ver: "v1beta",
-            model: "gemini-1.5-flash-latest",
-            url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent`
-        };
+    // Helper: fetch with strict timeout
+    function fetchWithTimeout(url, options = {}, timeoutMs = 4500) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        return fetch(url, { ...options, signal: controller.signal })
+            .finally(() => clearTimeout(timer));
     }
 
     // Call Google Gemini API
-    async function askGemini(promptText) {
-        const endpoint = await resolveWorkingEndpoint();
+    async function askGemini(promptText, statusCallback) {
+        // If we already have a verified working endpoint, use it directly!
+        let candidateList = [];
 
-        // Universal persona setup compatible with all Gemini versions (v1 and v1beta)
-        const contents = [
-            {
-                role: "user",
-                parts: [{ 
-                    text: `[System Instructions: You are Haneko (real name ThanhHai, nicknamed Jett / TTHaii). 
-You are a secondary school student passionate about IT, science, CachyOS Linux (Kernel 7.3.0-4-cachyos, foot terminal, fish 4.9.3 shell, Hyprland on HP Laptop 14-em0xxx with AMD Ryzen 5 7520U and AMD Radeon 610M), and playing Valorant. 
-Answer concisely, in a chill and friendly persona. Respond in the same language as the user (Vietnamese or English).]` 
-                }]
-            },
-            {
-                role: "model",
-                parts: [{ text: "Got it! I am Haneko. I am ready to chill and chat with you." }]
-            },
-            ...conversationHistory,
-            {
-                role: "user",
-                parts: [{ text: promptText }]
-            }
+        if (verifiedEndpoint) {
+            candidateList.push(verifiedEndpoint);
+        }
+
+        // Add current active Gemini models (Gemini 3.8 Flash, 3.5 Flash, 2.0 Flash, 1.5 Flash)
+        const modernModels = [
+            "gemini-3.8-flash",
+            "gemini-3.5-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-flash-latest",
+            "gemini-1.5-flash-8b",
+            "gemini-2.0-flash-exp",
+            "gemini-2.5-flash"
         ];
 
-        // Try primary endpoint
-        let candidateUrls = [
-            endpoint.url,
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent`,
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,
-            `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent`,
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent`
-        ];
+        for (const mod of modernModels) {
+            candidateList.push({ ver: "v1beta", model: mod });
+            candidateList.push({ ver: "v1",     model: mod });
+        }
 
-        // Deduplicate URLs
-        candidateUrls = [...new Set(candidateUrls)];
+        // Deduplicate
+        const seen = new Set();
+        const candidates = candidateList.filter(item => {
+            const key = `${item.ver}/${item.model}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+
+        const systemNote = "You are Haneko (ThanhHai / Jett). You run CachyOS Linux, Hyprland, foot terminal, fish shell on HP Laptop, and play Valorant. Answer concisely and chill in the user's language.";
+
+        const requestPayload = {
+            contents: [
+                ...conversationHistory,
+                {
+                    role: "user",
+                    parts: [{ text: `${promptText}\n\n[Instruction: ${systemNote}]` }]
+                }
+            ]
+        };
 
         let lastError = null;
 
-        for (const url of candidateUrls) {
+        for (const item of candidates) {
+            if (statusCallback) statusCallback(`Connecting to ${item.model}...`);
+            const url = `https://generativelanguage.googleapis.com/${item.ver}/models/${item.model}:generateContent?key=${encodeURIComponent(activeKey)}`;
+
             try {
-                const response = await fetch(`${url}?key=${encodeURIComponent(GEMINI_API_KEY)}`, {
+                const response = await fetchWithTimeout(url, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ contents })
-                });
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestPayload)
+                }, 4000);
 
                 if (response.ok) {
                     const data = await response.json();
                     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (text) {
-                        // Cache this successful URL
-                        cachedModelEndpoint = { url };
-                        // Save conversation memory
+                        // VERIFIED WORKING! Lock to this endpoint for all future messages!
+                        verifiedEndpoint = item;
+                        console.log(`Connected successfully using ${item.ver}/${item.model}!`);
+                        
                         conversationHistory.push({ role: "user", parts: [{ text: promptText }] });
                         conversationHistory.push({ role: "model", parts: [{ text }] });
                         if (conversationHistory.length > 20) {
@@ -346,14 +316,23 @@ Answer concisely, in a chill and friendly persona. Respond in the same language 
                     }
                 } else {
                     const errJson = await response.json().catch(() => ({}));
-                    lastError = new Error(errJson.error?.message || `HTTP ${response.status}: ${response.statusText}`);
+                    const errMsg = errJson.error?.message || `HTTP ${response.status}: ${response.statusText}`;
+                    lastError = new Error(`[${item.ver}/${item.model}] ${errMsg}`);
+                    console.warn(`Model ${item.model} returned error, skipping:`, errMsg);
+                    // Continue to next candidate!
                 }
             } catch (err) {
-                lastError = err;
+                if (err.name === 'AbortError') {
+                    lastError = new Error(`[${item.model}] Timeout (> 4s).`);
+                } else {
+                    lastError = err;
+                }
+                console.warn(`Model ${item.model} exception, skipping:`, err);
             }
         }
 
-        throw lastError || new Error("Không thể kết nối đến Gemini API.");
+        if (verifiedEndpoint) verifiedEndpoint = null;
+        throw lastError || new Error("Không thể kết nối đến máy chủ Google Gemini.");
     }
 
     // Markdown Formatter for AI response
@@ -390,6 +369,7 @@ Answer concisely, in a chill and friendly persona. Respond in the same language 
             // Built-in shortcut commands
             if (lower === "clear") {
                 conversationHistory = [];
+                verifiedEndpoint = null;
                 chatMessages.innerHTML = "";
                 appendAssistantMessage("<p>Terminal cleared. Memory reset. Ask Gemini AI anything or type <code>specs</code>.</p>");
                 return;
@@ -400,26 +380,52 @@ Answer concisely, in a chill and friendly persona. Respond in the same language 
                 return;
             }
 
+            // Command to dynamically update API key right from chat:
+            if (lower.startsWith("/key ") || lower.startsWith("key ")) {
+                const parts = text.split(" ");
+                const newKey = parts[1]?.trim();
+                if (newKey) {
+                    activeKey = newKey;
+                    localStorage.setItem("GEMINI_USER_KEY", newKey);
+                    verifiedEndpoint = null;
+                    appendAssistantMessage(`
+                        <p style="color: #a6e3a1;">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Đã cập nhật API Key mới: <code>${newKey.substring(0, 10)}...</code>
+                        </p>
+                        <p>Bây giờ bạn có thể gõ câu hỏi để trò chuyện!</p>
+                    `);
+                    return;
+                }
+            }
+
             // Show thinking indicator
             const thinkingEl = appendAssistantMessage(`
                 <div class="thinking-bubble">
                     <span class="ring-loader"></span>
-                    <span>Gemini is thinking...</span>
+                    <span id="thinkingStatusText">Gemini is thinking...</span>
                 </div>
             `);
 
+            const updateStatus = (statusStr) => {
+                const statusSpan = document.getElementById("thinkingStatusText");
+                if (statusSpan) statusSpan.textContent = statusStr;
+            };
+
             try {
-                const reply = await askGemini(text);
+                const reply = await askGemini(text, updateStatus);
                 thinkingEl.innerHTML = formatMarkdown(reply);
             } catch (err) {
                 console.error("Gemini API Error:", err);
+                const testLink = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(activeKey)}`;
                 thinkingEl.innerHTML = `
-                    <div style="color: #f87171;">
+                    <div style="color: #f38ba8; margin-bottom: 6px;">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <strong>Gemini API Error:</strong> ${escapeHTML(err.message)}
                     </div>
-                    <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">
-                        Kiểm tra lại kết nối mạng hoặc tính hợp lệ của API Key.
+                    <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+                        • Mở link kiểm tra model được cấp phép: <a href="${testLink}" target="_blank" style="color: #89b4fa; text-decoration: underline;">Xem danh sách model của Key</a><br/>
+                        • Đổi key mới bằng lệnh: <code>/key &lt;mã_key_mới&gt;</code>
                     </div>
                 `;
             }
@@ -430,6 +436,7 @@ Answer concisely, in a chill and friendly persona. Respond in the same language 
     if (mockNewSessionBtn) {
         mockNewSessionBtn.addEventListener('click', () => {
             conversationHistory = [];
+            verifiedEndpoint = null;
             chatMessages.innerHTML = "";
             appendAssistantMessage(`
                 <p>Started a fresh session in <strong>h4n3k0_0 @ Jettpc</strong> (fish 4.9.3).</p>
